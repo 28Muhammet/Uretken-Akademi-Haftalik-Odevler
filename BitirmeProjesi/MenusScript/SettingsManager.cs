@@ -16,10 +16,10 @@ public class SettingsManager : MonoBehaviour
 
     void Start()
     {
-        bgmSlider.value = PlayerPrefs.GetFloat("BGMVolume", 1.0f);
+        bgmSlider.value = PlayerPrefs.GetFloat("BGMVolume", .5f);
         SetBGMVolume(bgmSlider.value);
 
-        sfxMasterSlider.value = PlayerPrefs.GetFloat("SFXMasterVolume", 1.0f);
+        sfxMasterSlider.value = PlayerPrefs.GetFloat("SFXMasterVolume", .7f);
         SetSFXMasterVolume(sfxMasterSlider.value);
     }
 

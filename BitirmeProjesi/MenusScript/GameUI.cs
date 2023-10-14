@@ -46,15 +46,54 @@ public class GameUI : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) && !paneller[5].activeSelf)
         {
-            EscBtn();
+            if (paneller[3].activeSelf)
+            {
+                paneller[3].SetActive(false);
+                paneller[1].SetActive(false);
+                paneller[2].SetActive(false);
+                paneller[0].SetActive(true);
+
+                Time.timeScale = 0;
+
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+            }
+            else if (paneller[0].activeSelf)
+            {
+
+                paneller[0].SetActive(false);
+                paneller[1].SetActive(true);
+                paneller[2].SetActive(true);
+
+                Time.timeScale = 1;
+
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            }
+            else
+            {
+                paneller[0].SetActive(true);
+                paneller[1].SetActive(false);
+                paneller[2].SetActive(false);
+
+                Time.timeScale = 0;
+
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+            }
         }
     }
 
     public void MainMenu()
     {
         SceneManager.LoadScene("Menü");
+    }
+
+    public void TryAgainBtn()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     public void BackBtn()
@@ -73,44 +112,5 @@ public class GameUI : MonoBehaviour
     {
         paneller[3].SetActive(false);
         paneller[0].SetActive(true);
-    }
-
-    private void EscBtn()
-    {
-        if (paneller[3].activeSelf)
-        {
-            paneller[3].SetActive(false);
-            paneller[1].SetActive(false);
-            paneller[2].SetActive(false);
-            paneller[0].SetActive(true);
-
-            Time.timeScale = 0;
-
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-        }
-        else if (paneller[0].activeSelf)
-        {
-
-            paneller[0].SetActive(false);
-            paneller[1].SetActive(true);
-            paneller[2].SetActive(true);
-
-            Time.timeScale = 1;
-
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-        }
-        else
-        {
-            paneller[0].SetActive(true);
-            paneller[1].SetActive(false);
-            paneller[2].SetActive(false);
-
-            Time.timeScale = 0;
-
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-        }
     }
 }

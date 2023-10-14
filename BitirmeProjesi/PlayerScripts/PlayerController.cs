@@ -40,6 +40,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float atesEtmeSikligi2;
     [SerializeField] private AudioSource[] sources;
     [SerializeField] private ParticleSystem[] particleSystems;
+    [SerializeField] private GameObject cephaneBilgisi;
+    [SerializeField] private GameObject croshair;
     [SerializeField] public int toplamMermi;
     [SerializeField] private int jarjorKapistesi;
     [SerializeField] private int kalanMermi;
@@ -47,9 +49,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI kalanMermi_Text;
     [SerializeField] private Image headBar;
 
+    private int cephaneSayisi = 120;
+    private bool cephaneAlma = false;
     private bool canShoot = true;
 
     [Header("health Settings")]
+    [SerializeField] private GameObject gameOverPanel;
+
     private float health;
 
     private void Start()
@@ -81,15 +87,22 @@ public class PlayerController : MonoBehaviour
             if (Input.GetMouseButton(1))
             {
                 Aim();
+                croshair.SetActive(false);
+            }
+
+            if(Input.GetMouseButtonUp(1))
+            {
+                croshair.SetActive(true);
             }
            
             Jump();
+            Cephane();
         }
         else
         {
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
-        }     
+        }
     }
 
     private void FixedUpdate()
@@ -100,7 +113,7 @@ public class PlayerController : MonoBehaviour
         {
             Move();
             HandleCrouch();
-            Reload();       
+            Reload();
         }
         else
         {
@@ -283,6 +296,52 @@ public class PlayerController : MonoBehaviour
         _animator.SetBool("ReloadUI", false);
     }
 
+    private void Cephane()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(Cam.transform.position, Cam.transform.forward, out hit, 5.5f))
+        {
+            if (hit.transform.CompareTag("Cephane"))
+            {
+                cephaneAlma = true;
+                cephaneBilgisi.SetActive(true);
+
+                if (Input.GetKey(KeyCode.E) && cephaneAlma == true && !sources[4].isPlaying)
+                {
+                    if (toplamMermi < 120)
+                    {
+                        toplamMermi += (cephaneSayisi - toplamMermi);
+                        sources[4].Play();
+                    }
+                    else
+                    {
+                        cephaneAlma = false;
+                    }
+
+                    toplamMermi_Text.text = toplamMermi.ToString();
+                }
+            }
+            else if (hit.transform.CompareTag("Saðlýk") && health < 100)
+            {
+                cephaneBilgisi.SetActive(true);
+
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    health = 100f;
+                    headBar.fillAmount = health / 100;
+                }
+            }
+            else
+            {
+                cephaneBilgisi.SetActive(false);
+            }
+        }
+        else
+        {
+            cephaneBilgisi.SetActive(false);
+        }
+    }
+
     public void SaglikDurumu(float darbeGücü)
     {
         health -= darbeGücü;
@@ -291,6 +350,7 @@ public class PlayerController : MonoBehaviour
         if (health <= 0)
         {
             _animator.SetBool("Death", true);
+            gameOverPanel.SetActive(true);
         }
     }
 

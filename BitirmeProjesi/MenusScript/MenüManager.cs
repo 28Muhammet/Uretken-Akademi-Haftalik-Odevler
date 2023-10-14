@@ -45,6 +45,12 @@ public class MenüManager : MonoBehaviour
         menu.Close();
     }
 
+    private void Awake()
+    {
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+    }
+
     private void Update()
     {
         if(Input.GetKeyDown(KeyCode.Escape))
